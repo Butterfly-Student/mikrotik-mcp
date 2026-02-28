@@ -150,13 +150,72 @@ log:
 
 ### AI Provider yang Didukung
 
-| Provider | Base URL | Model Contoh |
-|----------|----------|-------------|
-| **Groq** (gratis) | `https://api.groq.com/openai/v1` | `llama-3.3-70b-versatile` |
-| Z.AI GLM | `https://api.z.ai/api/paas/v4` | `glm-4.7`, `glm-4.7-flash` |
-| OpenAI | `https://api.openai.com/v1` | `gpt-4o`, `gpt-4o-mini` |
+Syarat: **OpenAI-compatible API** + **Function Calling / Tool Use**.
+
+#### Cloud API
+
+| Provider | Base URL | Model | Gratis |
+|----------|----------|-------|:------:|
+| **Groq** | `https://api.groq.com/openai/v1` | `llama-3.3-70b-versatile` | ✅ |
+| Groq | `https://api.groq.com/openai/v1` | `llama-3.1-8b-instant` | ✅ |
+| Groq | `https://api.groq.com/openai/v1` | `mixtral-8x7b-32768` | ✅ |
+| Cerebras | `https://api.cerebras.ai/v1` | `llama-3.3-70b` | ✅ |
+| OpenRouter | `https://openrouter.ai/api/v1` | banyak pilihan | sebagian |
+| Z.AI GLM | `https://api.z.ai/api/paas/v4` | `glm-4.7`, `glm-4-flash` | ❌ |
+| OpenAI | `https://api.openai.com/v1` | `gpt-4o-mini`, `gpt-4o` | ❌ |
+| Together AI | `https://api.together.xyz/v1` | `llama-3.1-70b` | sebagian |
 
 > Untuk Z.AI GLM-4.7 set `thinking_mode: "enabled"` untuk reasoning yang lebih baik.
+
+#### Ollama (Lokal, Open Source)
+
+Jalankan LLM di komputer sendiri tanpa biaya dan tanpa data keluar ke internet.
+
+```bash
+# Install Ollama
+curl -fsSL https://ollama.ai/install.sh | sh   # Linux/Mac
+# Windows: download installer di https://ollama.ai
+
+# Pull model (pilih sesuai RAM)
+ollama pull qwen2.5:3b
+```
+
+Konfigurasi bot untuk Ollama:
+
+```yaml
+ai:
+  api_key: "ollama"                        # bebas isi apa saja
+  base_url: "http://localhost:11434/v1"
+  model: "qwen2.5:3b"                      # sesuaikan dengan model yang di-pull
+  thinking_mode: ""
+```
+
+Pilih model berdasarkan RAM yang tersedia:
+
+| RAM | Model | Kualitas Tool Calling |
+|-----|-------|-----------------------|
+| 2 GB | `qwen2.5:1.5b` | Cukup untuk query sederhana |
+| 2 GB | `llama3.2:1b` | Cukup |
+| **3 GB** | **`qwen2.5:3b`** | **Minimum yang layak** |
+| 3 GB | `llama3.2:3b` | Baik |
+| 5 GB | `qwen2.5:7b` | Bagus |
+| 5 GB | `llama3.1:8b` | Bagus |
+| 5 GB | `mistral:7b` | Bagus |
+| 10 GB | `qwen2.5:14b` | Sangat bagus |
+| 10 GB | `phi4:14b` | Sangat bagus |
+| 43 GB | `llama3.3:70b` | Terbaik |
+
+> **Catatan:** Model `<3B` sering gagal memformat JSON tool calling dengan benar. Jika bot tidak memanggil tools, coba model yang lebih besar. Seri `qwen2.5` umumnya lebih baik dalam tool calling dibanding `llama` untuk ukuran yang sama.
+
+#### Rekomendasi per Skenario
+
+| Skenario | Provider | Model |
+|----------|----------|-------|
+| Development / Testing | Groq | `llama-3.3-70b-versatile` |
+| Production, hemat biaya | Groq | `llama-3.1-8b-instant` |
+| Lokal, RAM 3-4 GB | Ollama | `qwen2.5:3b` |
+| Lokal, RAM 5-8 GB | Ollama | `qwen2.5:7b` atau `llama3.1:8b` |
+| Lokal, privasi penuh | Ollama | `qwen2.5:14b` |
 
 ---
 
