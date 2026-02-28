@@ -453,3 +453,15 @@ MIT License - lihat [LICENSE](LICENSE) untuk detail lengkap.
 ---
 
 <p align="center">Made with ❤️ for MikroTik enthusiasts</p>
+
+  # 1. Copy dan isi .env
+  cp .env.example .env  # isi MIKROTIK_PASSWORD dan ZAI_API_KEY
+
+  # 2. Jalankan gowa (proses terpisah)
+  ./gowa --port 3000 --webhook http://localhost:8090/webhook/message
+
+  # 3. Jalankan MCP Server (mode SSE wajib)
+  go run ./cmd/server   # config.yaml mcp.transport: "sse"
+
+  # 4. Jalankan Bot Service
+  go run ./cmd/bot
