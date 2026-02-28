@@ -22,7 +22,7 @@ whatsapp:
   webhook_secret: "super-secret-key"  # Harus sama dengan WHATSAPP_WEBHOOK_SECRET di gowa
 
 ai:
-  api_key: "" #api key dari penyedia LLM (misal Z.ai, OpenAI, dll)
+  api_key: "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" #api key dari penyedia LLM (misal Z.ai, OpenAI, dll)
   base_url: "https://api.groq.com/openai/v1"
   model: "llama-3.3-70b-versatile"             # glm-4.7 | glm-4.7-flashx | glm-4.7-flash
   max_tokens: 1024
