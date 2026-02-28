@@ -1,0 +1,17 @@
+mikrotik:
+  host: "192.168.233.1"
+  port: 8728            # 8729 untuk TLS
+  username: "admin"
+  password: "${MIKROTIK_PASSWORD}"
+  use_tls: false
+  reconnect_interval: 5s
+  timeout: 10s
+
+mcp:
+  transport: "stdio"    # stdio | sse
+  port: 8080            # hanya untuk transport SSE
+  read_only: false      # true = hanya GET/list, tidak bisa write
+
+log:
+  level: "info"         # debug | info | warn | error
+  format: "json"        # json | console
