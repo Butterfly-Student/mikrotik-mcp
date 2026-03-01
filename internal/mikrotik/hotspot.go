@@ -19,7 +19,7 @@ func NewHotspotRepository(client *Client) repository.HotspotRepository {
 }
 
 func (r *hotspotRepository) GetServers(ctx context.Context) ([]entity.HotspotServer, error) {
-	reply, err := r.client.Run("/ip/hotspot/print")
+	reply, err := r.client.RunContext(ctx, "/ip/hotspot/print")
 	if err != nil {
 		return nil, fmt.Errorf("hotspot server print: %w", err)
 	}
@@ -46,7 +46,7 @@ func (r *hotspotRepository) GetServers(ctx context.Context) ([]entity.HotspotSer
 }
 
 func (r *hotspotRepository) GetUsers(ctx context.Context) ([]entity.HotspotUser, error) {
-	reply, err := r.client.Run("/ip/hotspot/user/print")
+	reply, err := r.client.RunContext(ctx, "/ip/hotspot/user/print")
 	if err != nil {
 		return nil, fmt.Errorf("hotspot user print: %w", err)
 	}
@@ -83,7 +83,7 @@ func (r *hotspotRepository) GetUsers(ctx context.Context) ([]entity.HotspotUser,
 }
 
 func (r *hotspotRepository) GetActiveUsers(ctx context.Context) ([]entity.HotspotActive, error) {
-	reply, err := r.client.Run("/ip/hotspot/active/print")
+	reply, err := r.client.RunContext(ctx, "/ip/hotspot/active/print")
 	if err != nil {
 		return nil, fmt.Errorf("hotspot active print: %w", err)
 	}
@@ -149,7 +149,7 @@ func (r *hotspotRepository) AddUser(ctx context.Context, req dto.CreateHotspotUs
 		args = append(args, "=comment="+req.Comment)
 	}
 
-	_, err := r.client.Run(args...)
+	_, err := r.client.RunArgsContext(ctx, args)
 	if err != nil {
 		return fmt.Errorf("hotspot user add: %w", err)
 	}
@@ -157,7 +157,7 @@ func (r *hotspotRepository) AddUser(ctx context.Context, req dto.CreateHotspotUs
 }
 
 func (r *hotspotRepository) DeleteUser(ctx context.Context, id string) error {
-	_, err := r.client.Run("/ip/hotspot/user/remove", "=.id="+id)
+	_, err := r.client.RunContext(ctx, "/ip/hotspot/user/remove", "=.id="+id)
 	if err != nil {
 		return fmt.Errorf("hotspot user remove: %w", err)
 	}
@@ -165,7 +165,7 @@ func (r *hotspotRepository) DeleteUser(ctx context.Context, id string) error {
 }
 
 func (r *hotspotRepository) KickActiveUser(ctx context.Context, id string) error {
-	_, err := r.client.Run("/ip/hotspot/active/remove", "=.id="+id)
+	_, err := r.client.RunContext(ctx, "/ip/hotspot/active/remove", "=.id="+id)
 	if err != nil {
 		return fmt.Errorf("hotspot active kick: %w", err)
 	}

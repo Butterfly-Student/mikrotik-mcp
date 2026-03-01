@@ -52,6 +52,7 @@ func main() {
 		UseTLS:            cfg.MikroTik.UseTLS,
 		ReconnectInterval: cfg.MikroTik.ReconnectInterval,
 		Timeout:           cfg.MikroTik.Timeout,
+		PoolSize:          cfg.MikroTik.PoolSize,
 	}, zapLogger)
 
 	// Connect to router

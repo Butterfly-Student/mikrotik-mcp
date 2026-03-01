@@ -2,15 +2,54 @@ mikrotik:
   host: "192.168.233.1"
   port: 8728            # 8729 untuk TLS
   username: "admin"
-  password: "${MIKROTIK_PASSWORD}"
+  password: "r00t"
   use_tls: false
   reconnect_interval: 5s
   timeout: 10s
 
 mcp:
-  transport: "stdio"    # stdio | sse
-  port: 8080            # hanya untuk transport SSE
+  transport: "sse"      # stdio | sse — WAJIB sse agar bot bisa konek via HTTP
+  port: 8080
   read_only: false      # true = hanya GET/list, tidak bisa write
+
+whatsapp:
+  gowa_url: "http://localhost:3000"
+  gowa_device_id: "1ea3bb2f-c501-4d53-8063-3bc5d59b519a"              # Isi setelah login (lihat GET /app/devices)
+  gowa_username: "user1"   # Basic auth username gowa (default: "admin")
+  gowa_password: "pass1"   # Basic auth password gowa
+  webhook_port: 8090
+  webhook_path: "/webhook/message"
+  webhook_secret: "super-secret-key"  # Harus sama dengan WHATSAPP_WEBHOOK_SECRET di gowa
+
+ai:
+  api_key: "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" #api key dari penyedia LLM (misal Z.ai, OpenAI, dll)
+  base_url: "https://api.groq.com/openai/v1"
+  model: "llama-3.3-70b-versatile"             # glm-4.7 | glm-4.7-flashx | glm-4.7-flash
+  max_tokens: 1024
+  temperature: 0.7
+  thinking_mode: ""    # "enabled" | "disabled" | "" (pakai default server)
+  system_prompt: |
+    Kamu adalah asisten jaringan bernama MikroBot yang mengelola MikroTik router.
+    Kemampuanmu: firewall, IP pool, hotspot, queue bandwidth, monitoring interface, dan sistem.
+
+    Panduan:
+    - Gunakan bahasa Indonesia yang jelas dan ringkas
+    - Format bandwidth dengan satuan yang mudah dibaca (Mbps, Kbps)
+    - Sebelum operasi destruktif (hapus, reboot), minta konfirmasi eksplisit
+    - Tampilkan hasil dalam format yang rapi menggunakan bold dan list
+
+bot:
+  mcp_server_url: "http://localhost:8080"
+  max_function_call_loops: 5
+  session_ttl: 2h
+  max_history_messages: 20
+  authorized_users:
+    - phone: "62881011057218"
+      name: "Admin Utama"
+      access: "full"
+    - phone: "6285954154437"
+      name: "Staff NOC"
+      access: "readonly"
 
 log:
   level: "info"         # debug | info | warn | error
