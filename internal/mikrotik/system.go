@@ -19,7 +19,7 @@ func NewSystemRepository(client *Client) repository.SystemRepository {
 }
 
 func (r *systemRepository) GetResource(ctx context.Context) (*entity.SystemResource, error) {
-	reply, err := r.client.Run("/system/resource/print")
+	reply, err := r.client.RunContext(ctx, "/system/resource/print")
 	if err != nil {
 		return nil, fmt.Errorf("system resource print: %w", err)
 	}
@@ -60,7 +60,7 @@ func (r *systemRepository) GetLogs(ctx context.Context, req dto.GetLogsRequest) 
 		args = append(args, "?topics="+req.Topics)
 	}
 
-	reply, err := r.client.Run(args...)
+	reply, err := r.client.RunArgsContext(ctx, args)
 	if err != nil {
 		return nil, fmt.Errorf("log print: %w", err)
 	}
@@ -71,7 +71,6 @@ func (r *systemRepository) GetLogs(ctx context.Context, req dto.GetLogsRequest) 
 	}
 
 	logs := make([]entity.SystemLog, 0, limit)
-	// Return most recent logs (last N entries)
 	start := len(reply.Re) - limit
 	if start < 0 {
 		start = 0
@@ -88,7 +87,7 @@ func (r *systemRepository) GetLogs(ctx context.Context, req dto.GetLogsRequest) 
 }
 
 func (r *systemRepository) GetIdentity(ctx context.Context) (*entity.SystemIdentity, error) {
-	reply, err := r.client.Run("/system/identity/print")
+	reply, err := r.client.RunContext(ctx, "/system/identity/print")
 	if err != nil {
 		return nil, fmt.Errorf("system identity print: %w", err)
 	}
@@ -101,7 +100,7 @@ func (r *systemRepository) GetIdentity(ctx context.Context) (*entity.SystemIdent
 }
 
 func (r *systemRepository) Reboot(ctx context.Context) error {
-	_, err := r.client.Run("/system/reboot")
+	_, err := r.client.RunContext(ctx, "/system/reboot")
 	if err != nil {
 		return fmt.Errorf("system reboot: %w", err)
 	}

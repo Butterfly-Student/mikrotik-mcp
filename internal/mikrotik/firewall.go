@@ -19,7 +19,7 @@ func NewFirewallRepository(client *Client) repository.FirewallRepository {
 }
 
 func (r *firewallRepository) GetAll(ctx context.Context) ([]entity.FirewallRule, error) {
-	reply, err := r.client.Run("/ip/firewall/filter/print")
+	reply, err := r.client.RunContext(ctx, "/ip/firewall/filter/print")
 	if err != nil {
 		return nil, fmt.Errorf("firewall filter print: %w", err)
 	}
@@ -98,7 +98,7 @@ func (r *firewallRepository) Create(ctx context.Context, req dto.CreateFirewallR
 		args = append(args, "=place-before="+req.PlaceBefore)
 	}
 
-	_, err := r.client.Run(args...)
+	_, err := r.client.RunArgsContext(ctx, args)
 	if err != nil {
 		return fmt.Errorf("firewall filter add: %w", err)
 	}
@@ -106,7 +106,7 @@ func (r *firewallRepository) Create(ctx context.Context, req dto.CreateFirewallR
 }
 
 func (r *firewallRepository) Delete(ctx context.Context, id string) error {
-	_, err := r.client.Run("/ip/firewall/filter/remove", "=.id="+id)
+	_, err := r.client.RunContext(ctx, "/ip/firewall/filter/remove", "=.id="+id)
 	if err != nil {
 		return fmt.Errorf("firewall filter remove: %w", err)
 	}
@@ -114,13 +114,11 @@ func (r *firewallRepository) Delete(ctx context.Context, id string) error {
 }
 
 func (r *firewallRepository) Toggle(ctx context.Context, id string, disabled bool) error {
-	var cmd string
+	cmd := "/ip/firewall/filter/enable"
 	if disabled {
 		cmd = "/ip/firewall/filter/disable"
-	} else {
-		cmd = "/ip/firewall/filter/enable"
 	}
-	_, err := r.client.Run(cmd, "=.id="+id)
+	_, err := r.client.RunContext(ctx, cmd, "=.id="+id)
 	if err != nil {
 		return fmt.Errorf("firewall filter toggle: %w", err)
 	}

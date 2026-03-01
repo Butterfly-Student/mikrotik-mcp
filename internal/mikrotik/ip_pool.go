@@ -18,7 +18,7 @@ func NewIPPoolRepository(client *Client) repository.IPPoolRepository {
 }
 
 func (r *ipPoolRepository) GetAll(ctx context.Context) ([]entity.IPPool, error) {
-	reply, err := r.client.Run("/ip/pool/print")
+	reply, err := r.client.RunContext(ctx, "/ip/pool/print")
 	if err != nil {
 		return nil, fmt.Errorf("ip pool print: %w", err)
 	}
@@ -37,7 +37,7 @@ func (r *ipPoolRepository) GetAll(ctx context.Context) ([]entity.IPPool, error) 
 }
 
 func (r *ipPoolRepository) GetUsed(ctx context.Context) ([]entity.IPPoolUsed, error) {
-	reply, err := r.client.Run("/ip/pool/used/print")
+	reply, err := r.client.RunContext(ctx, "/ip/pool/used/print")
 	if err != nil {
 		return nil, fmt.Errorf("ip pool used print: %w", err)
 	}
@@ -55,7 +55,7 @@ func (r *ipPoolRepository) GetUsed(ctx context.Context) ([]entity.IPPoolUsed, er
 }
 
 func (r *ipPoolRepository) GetByName(ctx context.Context, name string) (*entity.IPPool, error) {
-	reply, err := r.client.Run("/ip/pool/print", "?name="+name)
+	reply, err := r.client.RunContext(ctx, "/ip/pool/print", "?name="+name)
 	if err != nil {
 		return nil, fmt.Errorf("ip pool find by name: %w", err)
 	}
@@ -80,7 +80,7 @@ func (r *ipPoolRepository) Create(ctx context.Context, req dto.CreateIPPoolReque
 	if req.Comment != "" {
 		args = append(args, "=comment="+req.Comment)
 	}
-	_, err := r.client.Run(args...)
+	_, err := r.client.RunArgsContext(ctx, args)
 	if err != nil {
 		return fmt.Errorf("ip pool add: %w", err)
 	}
@@ -98,7 +98,7 @@ func (r *ipPoolRepository) Update(ctx context.Context, req dto.UpdateIPPoolReque
 	if req.Comment != "" {
 		args = append(args, "=comment="+req.Comment)
 	}
-	_, err := r.client.Run(args...)
+	_, err := r.client.RunArgsContext(ctx, args)
 	if err != nil {
 		return fmt.Errorf("ip pool set: %w", err)
 	}
@@ -106,7 +106,7 @@ func (r *ipPoolRepository) Update(ctx context.Context, req dto.UpdateIPPoolReque
 }
 
 func (r *ipPoolRepository) Delete(ctx context.Context, id string) error {
-	_, err := r.client.Run("/ip/pool/remove", "=.id="+id)
+	_, err := r.client.RunContext(ctx, "/ip/pool/remove", "=.id="+id)
 	if err != nil {
 		return fmt.Errorf("ip pool remove: %w", err)
 	}

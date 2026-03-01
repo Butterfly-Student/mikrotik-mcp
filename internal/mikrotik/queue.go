@@ -19,7 +19,7 @@ func NewQueueRepository(client *Client) repository.QueueRepository {
 }
 
 func (r *queueRepository) GetAllSimple(ctx context.Context) ([]entity.SimpleQueue, error) {
-	reply, err := r.client.Run("/queue/simple/print")
+	reply, err := r.client.RunContext(ctx, "/queue/simple/print")
 	if err != nil {
 		return nil, fmt.Errorf("queue simple print: %w", err)
 	}
@@ -51,7 +51,7 @@ func (r *queueRepository) GetAllSimple(ctx context.Context) ([]entity.SimpleQueu
 }
 
 func (r *queueRepository) GetAllTree(ctx context.Context) ([]entity.QueueTree, error) {
-	reply, err := r.client.Run("/queue/tree/print")
+	reply, err := r.client.RunContext(ctx, "/queue/tree/print")
 	if err != nil {
 		return nil, fmt.Errorf("queue tree print: %w", err)
 	}
@@ -109,7 +109,7 @@ func (r *queueRepository) CreateSimple(ctx context.Context, req dto.CreateSimple
 		args = append(args, "=comment="+req.Comment)
 	}
 
-	_, err := r.client.Run(args...)
+	_, err := r.client.RunArgsContext(ctx, args)
 	if err != nil {
 		return fmt.Errorf("queue simple add: %w", err)
 	}
@@ -138,7 +138,7 @@ func (r *queueRepository) CreateTree(ctx context.Context, req dto.CreateQueueTre
 		args = append(args, "=comment="+req.Comment)
 	}
 
-	_, err := r.client.Run(args...)
+	_, err := r.client.RunArgsContext(ctx, args)
 	if err != nil {
 		return fmt.Errorf("queue tree add: %w", err)
 	}
@@ -146,7 +146,7 @@ func (r *queueRepository) CreateTree(ctx context.Context, req dto.CreateQueueTre
 }
 
 func (r *queueRepository) DeleteSimple(ctx context.Context, id string) error {
-	_, err := r.client.Run("/queue/simple/remove", "=.id="+id)
+	_, err := r.client.RunContext(ctx, "/queue/simple/remove", "=.id="+id)
 	if err != nil {
 		return fmt.Errorf("queue simple remove: %w", err)
 	}
@@ -154,7 +154,7 @@ func (r *queueRepository) DeleteSimple(ctx context.Context, id string) error {
 }
 
 func (r *queueRepository) DeleteTree(ctx context.Context, id string) error {
-	_, err := r.client.Run("/queue/tree/remove", "=.id="+id)
+	_, err := r.client.RunContext(ctx, "/queue/tree/remove", "=.id="+id)
 	if err != nil {
 		return fmt.Errorf("queue tree remove: %w", err)
 	}

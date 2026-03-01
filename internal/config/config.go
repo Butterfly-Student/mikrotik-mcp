@@ -24,6 +24,7 @@ type MikroTikConfig struct {
 	UseTLS            bool          `mapstructure:"use_tls"`
 	ReconnectInterval time.Duration `mapstructure:"reconnect_interval"`
 	Timeout           time.Duration `mapstructure:"timeout"`
+	PoolSize          int           `mapstructure:"pool_size"` // concurrent connections (default 3)
 }
 
 type MCPConfig struct {
@@ -79,6 +80,7 @@ func Load(path string) (*Config, error) {
 
 	// Defaults
 	v.SetDefault("mikrotik.port", 8728)
+	v.SetDefault("mikrotik.pool_size", 3)
 	v.SetDefault("mikrotik.use_tls", false)
 	v.SetDefault("mikrotik.reconnect_interval", 5*time.Second)
 	v.SetDefault("mikrotik.timeout", 10*time.Second)
